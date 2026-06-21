@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: cloud-share-svc
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      auto-index-creation: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 20MB
+server:
+  port: 8080
+  servlet:
+    context-path: /cloudshare
+
+clerk:
+  issuer: ${CLERK_ISSUER}
+  jwks-url: ${CLERK_JWKS_URL}
+  webhook:
+    secret: ${CLERK_SECRET}
+razorpay:
+  key:
+    id: ${RAZOR_PAY_ID}
+    secret: ${RAZORPAY_SECRET}
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
