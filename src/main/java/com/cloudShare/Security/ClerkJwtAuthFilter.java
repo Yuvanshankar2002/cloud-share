@@ -34,7 +34,7 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getRequestURI().contains("/api/v1/webhooks") || request.getRequestURI().contains("/api/v1/public/files")
-        || request.getRequestURI().contains("/download")) {
+        || request.getRequestURI().contains("/download") || request.getRequestURI().contains("/actuator/health") ) {
             filterChain.doFilter(request, response);
             return;
         }
