@@ -3,6 +3,7 @@ package com.cloudShare.Controller;
 import com.cloudShare.Service.WebhookService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Slf4j
 public class ClerkWebhookController {
 
     @Value("${clerk.webhook.secret}")
@@ -25,6 +27,7 @@ public class ClerkWebhookController {
                                                 @RequestHeader("svix-signature") String svixSignature,
                                                 @RequestBody String payload
                                                 ) throws JsonProcessingException {
+        log.info("Inside WebHook Controller Request {}",payload);
         try{
             boolean isValid = webhookService.verifyWebhookSignature(svixId,svixTimestamp,svixSignature,payload);
             if(!isValid){
@@ -35,6 +38,7 @@ public class ClerkWebhookController {
 
             return ResponseEntity.ok().build();
         }catch (Exception e){
+            log.info("Inside Exception in Webhook Controller { }",e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }

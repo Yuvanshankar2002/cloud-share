@@ -5,10 +5,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class WebhookService {
 
     private final ProfileService profileService;
@@ -75,6 +77,7 @@ public class WebhookService {
     }
 
     private void handleUserCreated(JsonNode data) {
+        log.info("Inside HandleUserCreated Method  {}" ,data);
         String clerkId = data.path("id").asText();
 
         String email="";
