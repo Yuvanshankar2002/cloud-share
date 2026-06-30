@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +24,7 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ClerkJwtAuthFilter extends OncePerRequestFilter {
 
     @Value("${clerk.issuer}")
@@ -33,11 +35,15 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("Request URI {}",request.getRequestURI());
         if (request.getRequestURI().contains("/api/v1/webhooks") || request.getRequestURI().contains("/api/v1/public/files")
         || request.getRequestURI().contains("/download") || request.getRequestURI().contains("/actuator/health") ) {
+            log.info("JWT Filter Skipped");
             filterChain.doFilter(request, response);
             return;
         }
+
+        log.info("Going for JWT verfication");
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization Header is Required");
